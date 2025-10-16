@@ -28,9 +28,10 @@ git push origin master/main
 				b.  Add the following files:
 							1.   depts.component.html
 							2.   depts.component.ts
-	
+	Complete
+
 	7.   Check  status command in every stage 
-	8.  Commit 
+	8.   Commit 
 	9.   Push the changes in remote repository 
 	
 	
