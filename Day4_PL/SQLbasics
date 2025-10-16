@@ -1,0 +1,214 @@
+
+-- Drop tables if they already exist (optional cleanup)
+DROP TABLE emps CASCADE CONSTRAINTS;
+DROP TABLE dept CASCADE CONSTRAINTS;
+
+-- Create DEPT table
+CREATE TABLE dept (
+    deptno NUMBER(4) PRIMARY KEY,
+    dname  VARCHAR2(20),
+    loc    VARCHAR2(20)
+);
+
+-- Create EMPS table
+CREATE TABLE emps (
+    empno   NUMBER(4) PRIMARY KEY,
+    ename   VARCHAR2(20),
+    job     VARCHAR2(20),
+    sal     NUMBER(10,2),
+    deptno  NUMBER(4),
+    CONSTRAINT fk_dept FOREIGN KEY (deptno) REFERENCES dept(deptno)
+);
+-- Insert Departments
+INSERT INTO dept VALUES (10, 'ACCOUNTING', 'NEW YORK');
+INSERT INTO dept VALUES (20, 'RESEARCH', 'DALLAS');
+INSERT INTO dept VALUES (30, 'SALES', 'CHICAGO');
+INSERT INTO dept VALUES (40, 'OPERATIONS', 'BOSTON');
+
+-- Insert Employees
+INSERT INTO emps VALUES (7839, 'KING', 'PRESIDENT', 5000, 10);
+INSERT INTO emps VALUES (7566, 'JONES', 'MANAGER', 2975, 20);
+INSERT INTO emps VALUES (7698, 'BLAKE', 'MANAGER', 2850, 30);
+INSERT INTO emps VALUES (7782, 'CLARK', 'MANAGER', 2450, 10);
+INSERT INTO emps VALUES (7788, 'SCOTT', 'ANALYST', 3000, 20);
+INSERT INTO emps VALUES (7902, 'FORD', 'ANALYST', 3000, 20);
+INSERT INTO emps VALUES (7844, 'TURNER', 'SALESMAN', 1500, 30);
+INSERT INTO emps VALUES (7900, 'JAMES', 'CLERK', 950, 30);
+INSERT INTO emps VALUES (7654, 'MARTIN', 'SALESMAN', 1250, 30);
+INSERT INTO emps VALUES (7499, 'ALLEN', 'SALESMAN', 1600, 30);
+INSERT INTO emps VALUES (7934, 'MILLER', 'CLERK', 1300, 10);
+COMMIT;
+
+--Subqueries-Validate All Given Queries
+--Employees earning more than average salary
+SELECT ename, sal 
+FROM emps 
+WHERE sal > (SELECT AVG(sal) FROM emps);
+
+--Employees in departments located in NEW YORK
+SELECT ename, deptno 
+FROM emps 
+WHERE deptno IN (SELECT deptno FROM dept WHERE loc = 'NEW YORK');
+
+--Employees having same job and deptno as employee 7839
+SELECT empno, ename, job, deptno
+FROM emps
+WHERE (job, deptno) IN (SELECT job, deptno FROM emps WHERE empno = 7839);
+
+--Employees earning more than avg salary of their dept
+SELECT e.ename, e.sal, e.deptno
+FROM emps e
+WHERE e.sal > (SELECT AVG(sal) FROM emps WHERE deptno = e.deptno);
+
+--Employees working in CHICAGO
+SELECT * 
+FROM emps 
+WHERE deptno IN (SELECT deptno FROM dept WHERE loc = 'CHICAGO');
+
+--Departments whose average salary > overall average salary
+SELECT deptno, AVG(sal) AS avg_sal
+FROM emps
+GROUP BY deptno
+HAVING AVG(sal) > (SELECT AVG(sal) FROM emps);
+
+--Employees with their department names
+SELECT e.ename,
+(SELECT d.dname FROM dept d WHERE d.deptno = e.deptno) AS department
+FROM emps e;
+
+--Update salaries of employees in SALES department (10% hike)
+UPDATE emps 
+SET sal = sal * 1.1 
+WHERE deptno = (SELECT deptno FROM dept WHERE dname = 'SALES');
+COMMIT;
+
+--Display employee names with their department names
+SELECT e.ename, d.dname
+FROM emps e
+JOIN dept d ON e.deptno = d.deptno;
+
+--List all employees with their job titles and department location
+SELECT e.ename, e.job, d.loc
+FROM emps e
+JOIN dept d ON e.deptno = d.deptno;
+
+--Display employees who work in SALES department
+SELECT e.ename, e.job, e.sal
+FROM emps e
+JOIN dept d ON e.deptno = d.deptno
+WHERE d.dname = 'SALES';
+
+--List all employees with department name and location, including departments with no employees
+SELECT e.ename, d.dname, d.loc
+FROM dept d
+LEFT JOIN emps e ON e.deptno = d.deptno;
+
+--Display all departments and employees, even if employee has no dept assigned
+SELECT e.ename, d.dname, d.loc
+FROM emps e
+FULL OUTER JOIN dept d ON e.deptno = d.deptno;
+
+--Each department name and total salary paid
+SELECT d.dname, SUM(e.sal) AS total_salary
+FROM dept d
+JOIN emps e ON d.deptno = e.deptno
+GROUP BY d.dname;
+
+--Departments having more than 3 employees
+SELECT d.dname, COUNT(e.empno) AS num_employees
+FROM dept d
+JOIN emps e ON d.deptno = e.deptno
+GROUP BY d.dname
+HAVING COUNT(e.empno) > 3;
+
+--Employees working in same location as ACCOUNTING dept
+SELECT e.ename, e.job, e.deptno
+FROM emps e
+WHERE e.deptno IN (
+  SELECT deptno FROM dept 
+  WHERE loc = (SELECT loc FROM dept WHERE dname = 'ACCOUNTING')
+);
+```
+--For each department, employee with highest salary
+SELECT e.deptno, e.ename, e.sal
+FROM emps e
+WHERE e.sal = (
+  SELECT MAX(sal) FROM emps WHERE deptno = e.deptno
+);
+
+--Employees whose salary > avg salary of their dept
+SELECT e.ename, e.sal, e.deptno
+FROM emps e
+WHERE e.sal > (SELECT AVG(sal) FROM emps WHERE deptno = e.deptno);
+
+BEGIN
+   DBMS_OUTPUT.PUT_LINE('Welcome to PL/SQL!');
+END;
+
+
+
+DECLARE
+     v_uname VARCHAR2(20)  :=  'Vaishu';
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Hi ' || v_uname || ', Good morning...!');        
+END;
+
+
+DECLARE
+   v_count NUMBER;
+BEGIN
+   SELECT COUNT(*) INTO v_count FROM emps;
+   DBMS_OUTPUT.PUT_LINE('Total emps: ' || v_count);
+END;
+
+DECLARE
+   v_sal NUMBER;
+BEGIN
+   SELECT sal INTO v_sal FROM emps WHERE empno = 7900;
+   IF v_sal > 3000 THEN
+      DBMS_OUTPUT.PUT_LINE('High sal employee');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('Normal sal employee');
+   END IF;
+END;
+
+--- Example 5:   Exception  Handling for Data Validation
+-- WITHOUT Exception block 
+DECLARE
+   v_dept emps.deptno%TYPE;
+BEGIN
+   SELECT deptno INTO v_dept FROM emps WHERE empno  = 7900;
+   DBMS_OUTPUT.PUT_LINE('Department Number : ' || v_dept);
+END;
+
+-- WITH Exception block  
+DECLARE
+   v_dept emps.deptno%TYPE;
+BEGIN
+   SELECT deptno INTO v_dept FROM emps WHERE empno  = 9999;
+   DBMS_OUTPUT.PUT_LINE('Department Number : ' || v_dept);
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('No such employee found!');
+END;
+
+--- Example6:   Working with attributes in PL/SQL --  TYPE
+DECLARE
+   v_dept emps.deptno%TYPE;
+BEGIN
+   SELECT deptno INTO v_dept FROM emps WHERE empno  = 7900;
+   DBMS_OUTPUT.PUT_LINE('Department Number : ' || v_dept);
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('No such employee found!');
+END;
+
+--- Example7:   Working with attributes in PL/SQL --  ROWTYPE
+DECLARE
+   emp_record emps%ROWTYPE;
+BEGIN
+   SELECT * INTO emp_record  FROM emps  WHERE empno = 7788;
+   DBMS_OUTPUT.PUT_LINE('Name: ' || emp_record.ename || ', Job :  ' || emp_record.job);
+END;
+
+
