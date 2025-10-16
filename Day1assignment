@@ -33,6 +33,115 @@ git push origin master/main
 	7.   Check  status command in every stage 
 	8.   Commit 
 	9.   Push the changes in remote repository 
-	
-	
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+1. What does git stash do?
+
+Solution:`git stash` temporarily saves (stashes) your uncommitted changes without committing them, so you can work on something else and come back later.
+
+Example:
+git stash
+
+Your working directory becomes clean (like before your edits).
+Later, you can get back your changes with:
+
+git stash pop
+
+Scenario Example:
+
+> You’re fixing a bug, but suddenly you need to switch branches to review someone’s code. You haven’t finished your bug fix yet.
+> Instead of committing incomplete work, you can `git stash` it, switch branches, and then `git stash pop` when you’re back.
+
+2. What does `git log` show?
+
+Solution:`git log` shows a list of all commits in the current branch — with commit IDs, authors, messages, and dates.
+
+Example:git log
+Output:
+commit 7a1f5d8 (HEAD -> main)
+Author: Vaishnavi <vaishnavi@example.com>
+Date: Thu Oct 16 18:00 2025
+Message: Fixed login issue
+
+Scenario Example:
+
+> You want to see who last modified a file or when a bug was introduced. You can use `git log -- filename`.
+
+3. What does `git branch` do?
+
+Solution:`git branch` lists, creates, or deletes branches.
+Examples:
+git branch           # List all branches
+git branch featureX  # Create a new branch named featureX
+git branch -d oldBranch  # Delete a branch
+
+Scenario Example:
+
+> You want to create a new feature without disturbing the main code. You make a new branch:
+> git branch new-feature
+> git checkout new-feature
+
+4. What does `git checkout` do?
+
+Solution:Used to switch between branches or restore files from a specific commit.
+
+Examples:
+git checkout featureX      # Switch to featureX branch
+git checkout main          # Switch back to main branch
+git checkout file.txt      # Restore file from last commit
+
+Scenario Example:
+> You accidentally changed a file and want to discard changes:
+> git checkout -- file.txt
+
+5. How to implement merging in Git?
+
+Solution:Merging combines changes from one branch into another.
+
+Example:
+git checkout main
+git merge featureX
+
+If there are no conflicts, Git merges automatically.
+If conflicts exist, Git will show conflict markers in files — you resolve them manually and then commit.
+
+Scenario Example:
+
+> You developed a new feature on `featureX` and now want it in production (main branch).
+> You switch to main and run:
+> git merge featureX
+
+6. Difference between Merge and Rebase
+
+Solution:
+
+| Feature        | Merge                                   | Rebase                                   |
+| -------------- | --------------------------------------- | ---------------------------------------- |
+| Purpose        | Combine two branches                    | Reapply commits on top of another branch |
+| Commit History | Keeps history as it is (can look messy) | Creates a linear, cleaner history        |
+| Example        | `git merge featureX`                    | `git rebase main`                        |
+| When to use    | Collaborative projects                  | Personal/local cleanup                   |
+
+Example:
+If `main` moved ahead while you were on `featureX`:
+`merge` → adds a new merge commit
+`rebase` → moves your commits on top of the latest `main`
+
+7. What is `.gitignore` used for?
+
+Used to tell Git which files or folders to ignore (not track).
+
+Example:`.gitignore` file content:
+node_modules/
+*.log
+.env
+Git will ignore all `.log` files, `.env` files, and the `node_modules` folder.
+
+Scenario Example:
+
+> You have temporary or sensitive files (like passwords, logs, or compiled binaries) that you don’t want in GitHub — you list them in `.gitignore`.
+
+
+
+
+
 	
