@@ -301,6 +301,134 @@ BEGIN
    DBMS_OUTPUT.PUT_LINE('Saved salaries in memory.'); 
 END;
 
+Assignment 1: Calculate Simple Interest
+
+DECLARE
+    p NUMBER := 10000;     -- Principal
+    r NUMBER := 5;         -- Rate of interest
+    t NUMBER := 2;         -- Time in years
+    si NUMBER;             -- Simple interest
+BEGIN
+    si := (p * r * t) / 100;
+    DBMS_OUTPUT.PUT_LINE('Simple Interest = ' || si);
+END;
+
+Output will appear as:
+
+Simple Interest = 1000
+
+Assignment 2: Employee Bonus Calculation
+
+DECLARE
+    emp_name VARCHAR2(50) := 'John';
+    salary NUMBER := 60000;
+    bonus NUMBER;
+BEGIN
+    IF salary > 50000 THEN
+        bonus := 0.10 * salary;
+    ELSE
+        bonus := 0.15 * salary;
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('Employee Name: ' || emp_name);
+    DBMS_OUTPUT.PUT_LINE('Salary: ' || salary);
+    DBMS_OUTPUT.PUT_LINE('Bonus: ' || bonus);
+END;
+
+Output will appear as:
+
+Employee Name: John
+Salary: 60000
+Bonus: 6000
+
+
+Assignment 3: Retrieve and Display Department Details
+
+DECLARE
+    v_dept DEPARTMENTS%ROWTYPE;
+    v_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE := 10; -- Example Dept ID
+BEGIN
+    SELECT * INTO v_dept
+    FROM DEPARTMENTS
+    WHERE DEPARTMENT_ID = v_dept_id;
+
+    DBMS_OUTPUT.PUT_LINE('Department Name: ' || v_dept.DEPARTMENT_NAME);
+    DBMS_OUTPUT.PUT_LINE('Location ID: ' || v_dept.LOCATION_ID);
+END;
+
+Output will appear as:
+Department Name: Administration
+Location ID: 1700
+
+Assignment 4: Student Marks Management
+
+DECLARE
+    TYPE marks_table IS TABLE OF NUMBER INDEX BY VARCHAR2(30);
+    student_marks marks_table;
+    total NUMBER := 0;
+    avg_marks NUMBER;
+    name VARCHAR2(30);
+BEGIN
+    -- Insert marks
+    student_marks('Asha') := 90;
+    student_marks('Rahul') := 85;
+    student_marks('Sneha') := 88;
+    student_marks('Kiran') := 92;
+    student_marks('Vikram') := 80;
+
+    name := student_marks.FIRST;
+    WHILE name IS NOT NULL LOOP
+        DBMS_OUTPUT.PUT_LINE('Student: ' || name || ' - Marks: ' || student_marks(name));
+        total := total + student_marks(name);
+        name := student_marks.NEXT(name);
+    END LOOP;
+
+    avg_marks := total / student_marks.COUNT;
+    DBMS_OUTPUT.PUT_LINE('Total Marks: ' || total);
+    DBMS_OUTPUT.PUT_LINE('Average Marks: ' || avg_marks);
+END;
+
+
+Output will appear as:
+Student: Asha - Marks: 90
+...
+Total Marks: 435
+Average Marks: 87
+
+🌍 Assignment 5: Country–Capital Lookup
+
+DECLARE
+    TYPE country_capital_type IS TABLE OF VARCHAR2(50) INDEX BY VARCHAR2(50);
+    country_capital country_capital_type;
+    country_name VARCHAR2(50);
+BEGIN
+    -- Insert data
+    country_capital('India') := 'New Delhi';
+    country_capital('USA') := 'Washington D.C.';
+    country_capital('France') := 'Paris';
+    country_capital('Germany') := 'Berlin';
+    country_capital('Japan') := 'Tokyo';
+    country_capital('Australia') := 'Canberra';
+
+    -- Ask for user input
+    country_name := '&country_name';
+
+    IF country_capital.EXISTS(country_name) THEN
+        DBMS_OUTPUT.PUT_LINE('Capital of ' || country_name || ' is ' || country_capital(country_name));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Country not found');
+    END IF;
+END;
+
+ Output:
+
+Enter value for country_name: India
+Capital of India is New Delhi
+
+
+
+
+
 
 
 
