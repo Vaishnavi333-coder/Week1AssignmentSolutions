@@ -127,7 +127,7 @@ WHERE e.deptno IN (
   SELECT deptno FROM dept 
   WHERE loc = (SELECT loc FROM dept WHERE dname = 'ACCOUNTING')
 );
-```
+
 --For each department, employee with highest salary
 SELECT e.deptno, e.ename, e.sal
 FROM emps e
@@ -149,7 +149,6 @@ DECLARE
 BEGIN
     DBMS_OUTPUT.PUT_LINE('Hi ' || v_uname || ', Good morning...!');        
 END;
-
 
 DECLARE
    v_count NUMBER;
@@ -341,7 +340,6 @@ Employee Name: John
 Salary: 60000
 Bonus: 6000
 
-
 Assignment 3: Retrieve and Display Department Details
 
 DECLARE
@@ -391,11 +389,11 @@ END;
 
 Output will appear as:
 Student: Asha - Marks: 90
-...
+
 Total Marks: 435
 Average Marks: 87
 
-🌍 Assignment 5: Country–Capital Lookup
+Assignment 5: Country–Capital Lookup
 
 DECLARE
     TYPE country_capital_type IS TABLE OF VARCHAR2(50) INDEX BY VARCHAR2(50);
